@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 src/main/resources/application*
+src/main/resources/uploads/tmp/*
+!src/main/resources/uploads/tmp/.gitkeep
 
 ### STS ###
 .apt_generated

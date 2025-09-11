@@ -57,8 +57,8 @@ public class AudioRestController {
     @PostMapping("/finalize")
     public ResponseEntity<Map<String, Object>> finalizeUpload(
             @RequestParam String uploadId,
-            @RequestParam(required = false) Integer totalChunks) throws Exception {
-
-        return ResponseEntity.ok(audioService.finalize(uploadId, totalChunks));
+            @RequestParam Integer totalChunks) throws Exception {
+        Map<String,Object> res = audioService.finalize(uploadId, totalChunks);
+        return ResponseEntity.ok(res);
     }
 }
