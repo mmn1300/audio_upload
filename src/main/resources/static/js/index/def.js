@@ -43,6 +43,8 @@ function setRecordingUI(isRecording) {
                 $("#rec-time").text(formatTime(seconds));
             }, 1000);
         }
+
+        $("#upload-change").addClass("hidden");
     }else{
         if (timer !== null) {
             // 타이머 정지
@@ -53,6 +55,7 @@ function setRecordingUI(isRecording) {
 
         $('#recBtn').text("녹음 시작");
         $("#rec-status").addClass("hidden");
+        $("#upload-change").removeClass("hidden");
         recStatus = false;
     }
 }

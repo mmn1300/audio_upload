@@ -46,6 +46,8 @@ function setUI(rec) {
                 $("#rec-time").text(formatTime(seconds));
             }, 1000);
         }
+        
+        $("#upload-change").addClass("hidden");
     }else{
         if (timer !== null) {
             // 타이머 정지
@@ -57,6 +59,7 @@ function setUI(rec) {
         $('#recBtn').text("녹음 시작");
         $("#rec-status").addClass("hidden");
         recStatus = false;
+        $("#upload-change").removeClass("hidden");
     }
 }
 
