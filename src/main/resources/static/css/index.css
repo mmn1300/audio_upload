@@ -1,0 +1,53 @@
+/* 화면 전체를 가운데 정렬 */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* 버튼과 텍스트를 세로 정렬 */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 정사각형 버튼 */
+.square-btn {
+  width: 40vmin;
+  height: 40vmin;
+  background-color: #df9739;  /* 변경된 색상 */
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
+}
+
+/* 버튼 안의 텍스트 */
+/* .btn-text {
+} */
+
+/* 버튼 아래 텍스트 */
+#rec-status {
+  font-size: 1.5rem;
+  color: #333;
+  min-height: 2em;   /* 숨겨져도 자리 유지 */
+}
+
+/* 숨김 처리 클래스 */
+.hidden {
+  visibility: hidden;  /* 공간은 차지하되 보이지 않음 */
+}
