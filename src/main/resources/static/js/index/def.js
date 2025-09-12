@@ -30,6 +30,14 @@ function getSupportedMime() {
     return ''; // 브라우저가 정하도록 둠
 }
 
+
+/* 
+    녹화 시작/종료시 동작하는 UI 상태 변경 함수
+
+    1. 버튼 상태 변경
+    2. 타이머 시작/종료
+    3. 업로드 방식 변경 a태그 숨기기/표시
+*/
 function setRecordingUI(isRecording) {
     if(isRecording){
         $('#recBtn').text("녹음 종료");
@@ -60,6 +68,9 @@ function setRecordingUI(isRecording) {
     }
 }
 
+/* 
+    초(sec) 정보를 HH:MM:SS 형식으로 변환하는 함수
+*/
 function formatTime(sec) {
     const hrs = String(Math.floor(sec / 3600)).padStart(2, "0");
     const mins = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");

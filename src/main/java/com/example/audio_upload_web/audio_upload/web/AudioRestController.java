@@ -33,32 +33,4 @@ public class AudioRestController {
 
         return ResponseEntity.ok(audioService.upload(file, contentType));
     }
-
-
-
-    @PostMapping("/session")
-    public ResponseEntity<Map<String, Object>> createSession() throws IOException {
-        String uploadId = audioService.createSession();
-        return ResponseEntity.ok(Map.of("ok", true, "uploadId", uploadId));
-    }
-
-
-    @PostMapping(value="/chunk", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> uploadChunk(
-            @RequestParam String uploadId,
-            @RequestParam int seq,
-            @RequestParam("file") MultipartFile file) throws IOException {
-
-        audioService.saveChunk(uploadId, seq, file);
-        return ResponseEntity.ok(Map.of("ok", true));
-    }
-
-
-    @PostMapping("/finalize")
-    public ResponseEntity<Map<String, Object>> finalizeUpload(
-            @RequestParam String uploadId,
-            @RequestParam Integer totalChunks) throws Exception {
-        Map<String,Object> res = audioService.finalize(uploadId, totalChunks);
-        return ResponseEntity.ok(res);
-    }
 }

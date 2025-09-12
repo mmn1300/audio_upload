@@ -6,9 +6,9 @@ let seconds = 0;
 
 // ====== 유틸 ======
 const API = {
-    session:  '/audio/session',
-    chunk:    '/audio/chunk',
-    finalize: '/audio/finalize'
+    session:  '/real-time/session',
+    chunk:    '/real-time/chunk',
+    finalize: '/real-time/finalize'
 };
 
 let mediaRecorder, stream;
