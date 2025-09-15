@@ -22,6 +22,11 @@ public class AudioRestController {
     private AudioService audioService;
 
 
+    /**
+     * 음성 파일을 업로드 받는 컨트롤러
+     * @param file 음성 파일
+     * @throws IOException 파일 저장 예외
+     * */
     @PostMapping(consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadAudio(@RequestParam("file") MultipartFile file) throws IOException {
         // 검증

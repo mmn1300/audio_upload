@@ -28,9 +28,12 @@ function formatTime(sec) {
 
 // ====== 스트림 & 레코더 준비 ======
 function getMime() {
-    const cands = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg'];
-    for (const m of cands) if (MediaRecorder.isTypeSupported(m)) return m;
-    return '';
+    const types = [
+        "audio/webm;codecs=opus",
+        "audio/mp4"
+    ];
+
+    return types.find(t => MediaRecorder.isTypeSupported(t))
 }
 
 function setUI(rec) {

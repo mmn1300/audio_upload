@@ -46,7 +46,8 @@ public class AudioService {
 
 
     /**
-     * 파일 형태 추출
+     * 파일 형식 추정
+     * @param ct 파일 형태
      * */
     private String guessExt(String ct) {
         return switch (ct) {
