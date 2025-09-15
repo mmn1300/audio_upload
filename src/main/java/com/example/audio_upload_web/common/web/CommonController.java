@@ -17,4 +17,8 @@ public class CommonController {
     public ModelAndView realTime(){
         return new ModelAndView("compression");
     }
+
+
+    @GetMapping("/rtc")
+    public ModelAndView realTimeCompression(){ return new ModelAndView("real-time-compression"); }
 }

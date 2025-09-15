@@ -30,7 +30,7 @@ public class CompressionService {
      * 파일을 업로드 함 (일괄 업로드)
      * @param file 업로드된 파일
      * @param contentType 파일의 형태
-     * @return 파일 저장 응답 {"ok":String, "storedPath":String, "contentType":String, "size":long}
+     * @return 파일 저장 응답 {"ok":boolean, "storedPath":String, "contentType":String, "size":long}
      * @throws IOException 파일 저장 예외
      * */
     public Map<String, Object> upload(MultipartFile file, String contentType) throws IOException {

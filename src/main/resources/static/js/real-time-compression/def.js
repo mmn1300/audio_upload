@@ -7,9 +7,9 @@ const sendSec = 1000; // 1초 단위 청크 파일 전송
 
 // ====== 유틸 ======
 const API = {
-    session:  '/real-time/session',
-    chunk:    '/real-time/chunk',
-    finalize: '/real-time/finalize'
+    session:  '/rtc/session',
+    chunk:    '/rtc/chunk',
+    finalize: '/rtc/finalize'
 };
 
 let mediaRecorder, stream;
@@ -89,20 +89,37 @@ async function createSession() {
 
 
 /* 
-    청크 파일을 업로드하는 함수
+    Blob을 File 객체로 래핑(업로드 편의를 위함)
 */
-async function sendChunk(id, index, blob) {
-    const fd = new FormData();
-    fd.append('uploadId', id);
-    fd.append('seq', String(index));
-    fd.append('file', new File([blob], `chunk_${index}.webm`, { type: blob.type || 'audio/webm' }));
-    return $.ajax({
-        url: API.chunk,
-        method: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false
-    });
+function toFile(blob, index) {
+    const name = `chunk_${index}.webm.${blob.type.includes('ogg') ? 'ogg' : 'webm'}`;
+    return new File([blob], name, { type: blob.type || 'audio/webm' });
+}
+
+
+/* 
+    청크 파일을 압축하여 업로드하는 함수
+*/
+async function sendChunk(id, index, file) {
+    const zip = new JSZip();
+    zip.file(file.name, file);
+
+    zip.generateAsync({type: 'blob'})
+        .then((resZip) => {
+            // 업로드
+            const fd = new FormData();
+            fd.append('uploadId', id);
+            fd.append('seq', String(index));
+            fd.append('file', resZip, file.name + ".zip");
+    
+            return $.ajax({
+                url: API.chunk,
+                method: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false
+            });
+        })
 }
 
 
@@ -129,7 +146,9 @@ function bindRecorder(recorder) {
     recorder.ondataavailable = (e) => {
     if (!e.data || e.data.size === 0) return;
         const mySeq = ++seq;
-        sending = sending.then(() => sendChunk(uploadId, mySeq, e.data))
+        const file = toFile(e.data, mySeq);
+        // 청크 파일 업로드
+        sending = sending.then(() => sendChunk(uploadId, mySeq, file))
                             .catch(err => console.error('chunk 업로드 실패:', err));
     };
 }

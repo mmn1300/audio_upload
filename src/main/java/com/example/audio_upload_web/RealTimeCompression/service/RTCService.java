@@ -1,12 +1,14 @@
-package com.example.audio_upload_web.real_time_upload.service;
+package com.example.audio_upload_web.RealTimeCompression.service;
 
 import com.example.audio_upload_web.audio_upload.constant.UploadPaths;
 import com.example.audio_upload_web.exception.AlreadyFinalizedException;
 import com.example.audio_upload_web.exception.NoSessionException;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -17,9 +19,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Service
-public class RealTimeService {
+@Log4j2
+public class RTCService {
 
     /*
      * 최종적으로 파일이 업로드 될 위치
@@ -77,6 +82,7 @@ public class RealTimeService {
      * 세션 및 파일 UUID값 생성<br/>
      * 청크 파일들을 연속적으로 업로드 받기 위함
      * @throws IOException 청크 파일 저장 위치 생성 예외
+     * @return 파일 UUID값
      * */
     public String createSession() throws IOException {
         String uploadId = UUID.randomUUID().toString();
@@ -112,17 +118,17 @@ public class RealTimeService {
 
         // 업로드 임시 파일 저장 디렉터리 (미존재시)생성
         Files.createDirectories(sessionDir);
-        
+
         // stream 파일 경로 지정
         Path streamFile = sessionDir.resolve(STREAM_FILE);
 
         // stream 파일에 append 모드로 청크 파일을 그대로 이어붙임
-        try (InputStream in = part.getInputStream();
+        try (InputStream in = unzipToMultipart(part).getInputStream();
              OutputStream out = Files.newOutputStream(streamFile,
                      StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
             in.transferTo(out);
         }
-        
+
 //        System.out.println("[appendChunk] uploadId=" + uploadId + " seq=" + seq +
 //                " -> " + streamFile.toAbsolutePath());
     }
@@ -132,6 +138,7 @@ public class RealTimeService {
      * 청크 파일 병합
      * @param uploadId 업로드 될 파일의 UUID값
      * @param totalChunks 전체 청크 파일 개수
+     * @return 파일 저장 응답 {"ok":boolean, "id":String, "key":String "contentType":String, "size":long}
      * @throws NoSessionException 세션 미존재 예외
      * @throws AlreadyFinalizedException 비 정상 상태 호출 예외
      * @throws IllegalStateException stream 파일 미존재 예외
@@ -215,6 +222,7 @@ public class RealTimeService {
      * ffmpeg 프로세스 실행 및 로그 수집
      * @param workDir 실행 대상 파일들이 존재하는 디렉터리 경로
      * @param args ffmpeg 프로세스 실행 옵션들
+     * @return 수집한 로그
      * @throws RuntimeException ffmpeg 프로세스 실행 예외
      * */
     private String runFfmpegCapture(Path workDir, String... args) throws Exception {
@@ -288,4 +296,39 @@ public class RealTimeService {
         }
     }
 
+
+
+    /**
+     * 압축을 해제하는 함수
+     * @param file 압축된 파일
+     * @return 압축 해제한 파일
+     * @throws IOException 파일 미존재 예외
+     * */
+    private MultipartFile unzipToMultipart(MultipartFile file) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(file.getInputStream())) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.isDirectory()) {
+                    continue;
+                }
+
+                // 파일 내용을 메모리에 읽어오기
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] buffer = new byte[8192];
+                int len;
+                while ((len = zis.read(buffer)) != -1) {
+                    baos.write(buffer, 0, len);
+                }
+
+                // MultipartFile 형태로 변환 (MockMultipartFile)
+                return new MockMultipartFile(
+                        entry.getName(),               // 원본 파일명
+                        entry.getName(),               // 업로드될 때의 파일명
+                        "audio/webm;codecs=opus",      // Content-Type
+                        baos.toByteArray()             // 파일 데이터
+                );
+            }
+        }
+        throw new IOException("파일이 존재하지 않습니다.");
+    }
 }

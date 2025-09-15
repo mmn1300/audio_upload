@@ -22,8 +22,7 @@ let currentStream = null;
 // ====== 유틸 ======
 function getSupportedMime() {
     const types = [
-        "audio/webm;codecs=opus",
-        "audio/mp4"
+        "audio/webm;codecs=opus"
     ];
 
     return types.find(t => MediaRecorder.isTypeSupported(t))
@@ -164,8 +163,8 @@ async function startRecording() {
             try {
                 const blob = buildAudioBlob(mime);
                 const file = toFile(blob);
-                const res = await uploadFile(file);
-                console.log('압축 파일 업로드 성공:', res);
+                await uploadFile(file);
+                console.log('압축 파일 업로드 성공:');
             } catch (err) {
                 console.error('압축 파일 업로드 실패:', err?.responseText || err);
             } finally {
