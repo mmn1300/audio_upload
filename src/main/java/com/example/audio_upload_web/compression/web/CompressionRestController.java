@@ -20,6 +20,11 @@ public class CompressionRestController {
     private CompressionService compressionService;
 
 
+    /**
+     * 압축 파일을 업로드 받는 컨트롤러
+     * @param file 압축된 파일
+     * @return {"ok":boolean, "storedPath":String, "contentType":String, "size":long}
+     * */
     @PostMapping(consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> compression(MultipartFile file) throws IOException {
         // 검증

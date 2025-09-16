@@ -23,6 +23,7 @@ public class RTCRestController {
 
     /**
      * 세션 생성
+     * @return {"ok":boolean, "uploadId":String}
      * @throws IOException 청크 파일 저장 위치 생성 예외
      * */
     @PostMapping("/session")
@@ -36,7 +37,8 @@ public class RTCRestController {
      * 청크 파일을 업로드 받는 컨트롤러
      * @param uploadId 업로드 될 파일의 UUID값
      * @param seq 청크 파일 업로드 순번
-     * @param file 청크 파일
+     * @param file 압축된 청크 파일
+     * @return {"ok":boolean}
      * @throws IOException 청크 파일 저장 예외
      * */
     @PostMapping(value="/chunk", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -45,6 +47,12 @@ public class RTCRestController {
             @RequestParam int seq,
             @RequestParam("file") MultipartFile file) throws IOException {
 
+        // 검증
+        if (!file.getContentType().endsWith("/zip")) {
+            return ResponseEntity.badRequest().body(Map.of());
+        }
+
+        // 청크 파일 저장
         RTCService.saveChunk(uploadId, seq, file);
         return ResponseEntity.ok(Map.of("ok", true));
     }
@@ -55,12 +63,12 @@ public class RTCRestController {
      * 모든 청크 파일 업로드 완료 신호를 받는 컨트롤러
      * @param uploadId 업로드 될 파일의 UUID값
      * @param totalChunks 업로드된 모든 청크 파일 수
+     * @return {"ok":boolean, "id":String, "key":String "contentType":String, "size":long}
      * */
     @PostMapping("/finalize")
     public ResponseEntity<Map<String, Object>> finalizeUpload(
             @RequestParam String uploadId,
             @RequestParam Integer totalChunks) throws Exception {
-        Map<String,Object> res = RTCService.finalize(uploadId, totalChunks);
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(RTCService.finalize(uploadId, totalChunks));
     }
 }

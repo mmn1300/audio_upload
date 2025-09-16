@@ -9,12 +9,18 @@ public class CommonController {
 
     @GetMapping("/")
     public ModelAndView index(){
+        return new ModelAndView("index");
+    }
+
+
+    @GetMapping("/real-time")
+    public ModelAndView realTime(){
         return new ModelAndView("real-time");
     }
 
 
     @GetMapping("/compression")
-    public ModelAndView realTime(){
+    public ModelAndView compression(){
         return new ModelAndView("compression");
     }
 

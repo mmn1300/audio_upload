@@ -277,6 +277,7 @@ public class RTCService {
      * @param f stream 파일 경로
      * @param stableMillis 안정화 기준 시간
      * @param timeoutMs 최대 대기 시간
+     * @return 정상 처리 여부
      * */
     private boolean waitFileStable(Path f, long stableMillis, long timeoutMs) throws IOException, InterruptedException {
         long deadline = System.currentTimeMillis() + timeoutMs;

@@ -76,6 +76,7 @@ public class RealTimeService {
     /**
      * 세션 및 파일 UUID값 생성<br/>
      * 청크 파일들을 연속적으로 업로드 받기 위함
+     * @return 파일 UUID값
      * @throws IOException 청크 파일 저장 위치 생성 예외
      * */
     public String createSession() throws IOException {
@@ -132,6 +133,7 @@ public class RealTimeService {
      * 청크 파일 병합
      * @param uploadId 업로드 될 파일의 UUID값
      * @param totalChunks 전체 청크 파일 개수
+     * @return 파일 병합 처리 상태 {"ok":boolean, "id":String, "key":String, "contentType":String, "size":long}
      * @throws NoSessionException 세션 미존재 예외
      * @throws AlreadyFinalizedException 비 정상 상태 호출 예외
      * @throws IllegalStateException stream 파일 미존재 예외
@@ -215,6 +217,7 @@ public class RealTimeService {
      * ffmpeg 프로세스 실행 및 로그 수집
      * @param workDir 실행 대상 파일들이 존재하는 디렉터리 경로
      * @param args ffmpeg 프로세스 실행 옵션들
+     * @return 수집한 로그
      * @throws RuntimeException ffmpeg 프로세스 실행 예외
      * */
     private String runFfmpegCapture(Path workDir, String... args) throws Exception {
@@ -269,6 +272,7 @@ public class RealTimeService {
      * @param f stream 파일 경로
      * @param stableMillis 안정화 기준 시간
      * @param timeoutMs 최대 대기 시간
+     * @return 정상 처리 여부
      * */
     private boolean waitFileStable(Path f, long stableMillis, long timeoutMs) throws IOException, InterruptedException {
         long deadline = System.currentTimeMillis() + timeoutMs;
