@@ -67,6 +67,7 @@ public class RealTimeService {
     public void init() throws IOException {
         Files.createDirectories(uploadRoot);
         Files.createDirectories(tmpRoot);
+        Files.createDirectories(uploadRoot.resolve(LocalDate.now().toString()));
         scheduler.setPoolSize(1);
         scheduler.initialize();
     }
@@ -164,11 +165,7 @@ public class RealTimeService {
 
         // 출력 경로 지정
         String id   = UUID.randomUUID().toString();
-        String date = LocalDate.now().toString();
-        Path outDir = uploadRoot.resolve(date);
-        Files.createDirectories(outDir);
-
-        Path out = outDir.resolve(id + ".webm");
+        Path out = uploadRoot.resolve(id + ".webm");
 
         // ffmpeg 실행 및 로그 수집
         // stream 파일을 읽어 전체 음성 데이터 추출 및 최종 음성 데이터 파일 생성
@@ -205,7 +202,7 @@ public class RealTimeService {
         return Map.of(
                 "ok", true,
                 "id", id,
-                "key", date + "/" + out.getFileName().toString(),
+                "key", out.getFileName().toString(),
                 "contentType", contentType,
                 "size", size
         );

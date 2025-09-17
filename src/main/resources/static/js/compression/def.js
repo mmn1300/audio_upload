@@ -133,7 +133,7 @@ async function uploadFile(file) {
     const zip = new JSZip();
     zip.file(file.name, file);
 
-    zip.generateAsync({type: 'blob'})
+    zip.generateAsync({type: 'blob', compression: "DEFLATE", compressionOptions: {level: 6}})
         .then((resZip) => {
             // 업로드
             const fd = new FormData();

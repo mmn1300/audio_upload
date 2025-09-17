@@ -2,7 +2,7 @@
 let recStatus = false;
 let timer = null;
 let seconds = 0;
-const sendSec = 1000; // 1초 단위 청크 파일 전송
+const sendSec = 10000; // 10초 단위 청크 파일 전송
 
 
 // ====== 유틸 ======
@@ -101,16 +101,19 @@ function toFile(blob, index) {
     청크 파일을 압축하여 업로드하는 함수
 */
 async function sendChunk(id, index, file) {
+    // console.log(`압축 전 : ${file.size}`);
     const zip = new JSZip();
     zip.file(file.name, file);
 
-    zip.generateAsync({type: 'blob'})
+    zip.generateAsync({type: 'blob', compression: "DEFLATE", compressionOptions: {level: 6}})
         .then((resZip) => {
             // 업로드
             const fd = new FormData();
             fd.append('uploadId', id);
             fd.append('seq', String(index));
             fd.append('file', resZip, file.name + ".zip");
+            // console.log(`압축 후 : ${resZip.size}`);
+            // console.log();
     
             return $.ajax({
                 url: API.chunk,

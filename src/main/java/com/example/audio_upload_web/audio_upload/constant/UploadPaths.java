@@ -30,7 +30,7 @@ public enum UploadPaths {
 
 
     /*
-    * 업로드 시작/종료 시간 측정 결과 파일이 저장될 위치 (테스트용) 
+    * 업로드 시작/종료 시간 측정 결과 파일이 저장될 위치 (테스트용)
     * */
     timeFile(Paths.get(
             System.getProperty("user.dir")

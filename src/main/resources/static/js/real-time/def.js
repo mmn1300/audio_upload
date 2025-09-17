@@ -2,7 +2,7 @@
 let recStatus = false;
 let timer = null;
 let seconds = 0;
-const sendSec = 1000; // 1초 단위 청크 파일 전송
+const sendSec = 3000; // 3초 단위 청크 파일 전송
 
 
 // ====== 유틸 ======
@@ -95,7 +95,9 @@ async function sendChunk(id, index, blob) {
     const fd = new FormData();
     fd.append('uploadId', id);
     fd.append('seq', String(index));
-    fd.append('file', new File([blob], `chunk_${index}.webm`, { type: blob.type || 'audio/webm' }));
+    const file = new File([blob], `chunk_${index}.webm`, { type: blob.type || 'audio/webm' });
+    // console.log(file.size);
+    fd.append('file', file);
     return $.ajax({
         url: API.chunk,
         method: 'POST',
