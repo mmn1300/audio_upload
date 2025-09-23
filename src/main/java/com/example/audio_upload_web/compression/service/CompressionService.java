@@ -1,6 +1,6 @@
 package com.example.audio_upload_web.compression.service;
 
-import com.example.audio_upload_web.audio_upload.constant.UploadPaths;
+import com.example.audio_upload_web.constant.UploadPaths;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

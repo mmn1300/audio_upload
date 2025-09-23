@@ -7,13 +7,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class CommonController {
 
-    @GetMapping("/")
+    @GetMapping("/index")
     public ModelAndView index(){
         return new ModelAndView("index");
     }
 
 
-    @GetMapping("/real-time")
+    @GetMapping("/")
     public ModelAndView realTime(){
         return new ModelAndView("real-time");
     }

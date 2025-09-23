@@ -61,7 +61,7 @@ function setUI(rec) {
             }, 1000);
         }
         
-        $("#upload-change").addClass("hidden");
+        // $("#upload-change").addClass("hidden");
     }else{
         if (timer !== null) {
             // 타이머 정지
@@ -73,7 +73,7 @@ function setUI(rec) {
         $('#recBtn').text("녹음 시작");
         $("#rec-status").addClass("hidden");
         recStatus = false;
-        $("#upload-change").removeClass("hidden");
+        // $("#upload-change").removeClass("hidden");
     }
 }
 
@@ -124,10 +124,12 @@ async function finalizeUpload(id, total) {
     녹음 종료 이벤트
 */
 function bindRecorder(recorder) {
+    // 녹음 정지 시 동작. 정지 이벤트가 실제로 발생 할 때까지 대기
     stoppedP = new Promise(resolve => {
         recorder.addEventListener('stop', resolve, { once: true });
     });
 
+    // 업로드 대기중인 청크 파일 부터 마지막 청크 파일까지 순서대로 전부 업로드
     recorder.ondataavailable = (e) => {
     if (!e.data || e.data.size === 0) return;
         const mySeq = ++seq;
@@ -195,6 +197,9 @@ async function stopRecording() {
         console.error('finalize 실패:', e);
     } finally {
         setUI(false);
-        uploadId = null; seq = 0; mediaRecorder = null; stream = null;
+        uploadId = null;
+        seq = 0;
+        mediaRecorder = null;
+        stream = null;
     }
 }

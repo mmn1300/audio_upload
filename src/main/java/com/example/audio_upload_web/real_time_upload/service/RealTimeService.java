@@ -1,6 +1,6 @@
 package com.example.audio_upload_web.real_time_upload.service;
 
-import com.example.audio_upload_web.audio_upload.constant.UploadPaths;
+import com.example.audio_upload_web.constant.UploadPaths ;
 import com.example.audio_upload_web.exception.AlreadyFinalizedException;
 import com.example.audio_upload_web.exception.NoSessionException;
 import jakarta.annotation.PostConstruct;
